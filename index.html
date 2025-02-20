@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>今日美食盲盒</title>
+    <style>
+        :root {
+            --primary-color: #ff6b6b;
+            --secondary-color: #4ecdc4;
+            --bg-gradient: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: var(--bg-gradient);
+            padding: 2rem;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 90%;
+            margin: auto;
+            text-align: center;
+        }
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            font-size: 2.2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        #result {
+            min-height: 80px;
+            font-size: 1.8rem;
+            color: #2d3436;
+            margin: 2rem 0;
+            transition: all 0.3s ease;
+        }
+        .btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
+        }
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        .loading {
+            display: none;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍱 今日美食盲盒 🥢</h1>
+        <div id="result"></div>
+        <button class="btn" onclick="startPick()">戳我开盒</button>
+        <div class="loading">正在召唤美食精灵...</div>
+    </div>
+
+    <script>
+        const foods = [
+            "麻辣爽爆烫双脆", "销魂脆锅巴排骨", "三及第汤配腌面",
+            "老滇过桥米线", "柳州螺蛳粉", "鸭血粉丝汤",
+            "照烧鸡腿饭", "麻辣嫩爆烫牛", "黄金虾饺皇",
+            "蟹粉小笼包", "红油抄手", "台式卤肉饭",
+            "海南鸡饭", "冬阴功汤", "韩式部队锅",
+            "日式鳗鱼饭", "法式红酒炖牛肉", "意式千层面",
+            "西班牙海鲜饭", "泰式芒果糯米饭", "港式菠萝油",
+            "澳门猪扒包", "川味回锅肉", "湘西土匪鸭",
+            "东北锅包肉", "新疆大盘鸡", "兰州牛肉面",
+            "西安肉夹馍", "河南胡辣汤", "山西刀削面",
+            "武汉热干面", "长沙臭豆腐", "南京盐水鸭",
+            "上海生煎包", "杭州片儿川", "苏州松鼠桂鱼",
+            "成都钟水饺", "重庆辣子鸡", "云南汽锅鸡",
+            "贵州酸汤鱼", "广东煲仔饭", "福建佛跳墙",
+            "台湾三杯鸡", "香港碗仔翅", "澳门葡国鸡"
+        ];
+        
+        let isPicking = false;
+        
+        function startPick() {
+            if (isPicking) return;
+            
+            const btn = document.querySelector('.btn');
+            const loading = document.querySelector('.loading');
+            const result = document.getElementById('result');
+            
+            isPicking = true;
+            btn.disabled = true;
+            loading.style.display = 'block';
+            result.textContent = '';
+            result.style.opacity = '0';
+
+            const startTime = Date.now();
+            const duration = 2000;
+            
+            const animation = () => {
+                if (Date.now() - startTime >= duration) {
+                    clearInterval(interval);
+                    showFinalResult();
+                    return;
+                }
+                result.textContent = foods[Math.floor(Math.random() * foods.length)];
+                result.style.opacity = (Math.sin(Date.now()/100)+1)/2;
+            };
+            
+            const interval = setInterval(animation, 80);
+            animation();
+        }
+
+        function showFinalResult() {
+            const result = document.getElementById('result');
+            const loading = document.querySelector('.loading');
+            const btn = document.querySelector('.btn');
+            
+            result.textContent = foods[Math.floor(Math.random() * foods.length)];
+            result.style.opacity = '1';
+            result.style.transform = 'scale(1.05)';
+            
+            setTimeout(() => result.style.transform = 'scale(1)', 200);
+            loading.style.display = 'none';
+            btn.disabled = false;
+            isPicking = false;
+        }
+    </script>
+</body>
+</html>
